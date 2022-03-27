@@ -1,0 +1,27 @@
+{
+    "node": {
+        "@ro": "rw",
+        "@name": "",
+        "@id": "0",
+        "node": [
+            {
+                "@ro": "ro",
+                "@name": "Playlist",
+                "@id": "1",
+                "leaf": {
+                    "@ro": "rw",
+                    "@name": "Promise",
+                    "@id": "3",
+                    "@duration": "149",
+                    "@uri": "file:///F:/Desktop/music/get%20down%20bitch.mp3",
+                    "@current": "current"
+                }
+            },
+            {
+                "@ro": "ro",
+                "@name": "Media Library",
+                "@id": "2"
+            }
+        ]
+    }
+}
