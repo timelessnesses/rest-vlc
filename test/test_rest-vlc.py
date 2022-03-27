@@ -1,12 +1,22 @@
 from dotenv import load_dotenv
 
-import rest_vlc
-
 load_dotenv()
 import os
 import pytest
+import sys
+
+sys.path.append("..")  # pytest problem?
+import rest_vlc
 
 vlc = rest_vlc.VLC(auth=("", os.environ["VLC_PASSWORD"]))
+
+
+@pytest.fixture
+def x():
+    yield
+    import time
+
+    time.sleep(0.2)
 
 
 def test_low_volume():
@@ -14,7 +24,7 @@ def test_low_volume():
 
 
 def test_up_volume():
-    assert vlc.set_volume(100), "Failed to set volume to 100"
+    assert vlc.set_volume(256), "Failed to set volume to 100"
 
 
 def test_pause():
@@ -75,3 +85,6 @@ def test_delete():
 
 def test_clear_history():
     assert vlc.clear_history(), "Failed to clear history"
+
+def test_seeking():
+    assert vlc.seek(69), "Failed to seek"

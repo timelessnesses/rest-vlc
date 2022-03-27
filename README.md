@@ -16,7 +16,7 @@ pip install rest-vlc
 
 ## Documentation
 
-Visit [the documentation](https://rest-vlc.readthedocs.io/en/latest/).
+Intellisense should self-explainatory about it, or you can go to the [https://rest-vlc.readthedocs.io/en/latest/](https://rest-vlc.readthedocs.io/en/latest/) documentation.
 
 ## Status
 Under Heavy development.

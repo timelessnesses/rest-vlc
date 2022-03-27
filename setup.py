@@ -18,5 +18,10 @@ setuptools.setup(
     python_requires=">=3",
     license="MIT",
     install_requires=["requests", "xmltodict"],
-    extras_require={"dev": ["pytest", "python-dotenv"]},
+    extras_require={
+        "dev": ["pytest", "python-dotenv"],
+        "build": ["build", "wheel"],
+        "async": ["aiohttp[speedups]", "uvloop ; sys_platform == 'linux'"],
+        "publish": ["twine", "wheel"],
+    },
 )

@@ -1,38 +1,72 @@
 import requests
 import xmltodict
+import warnings
+
+try:
+    import aiohttp
+
+    aiohttp_exists = True
+except ImportError:
+    aiohttp_exists = False
+
 
 class VLC:
     def __init__(
         self,
         url: str = "http://localhost:8080",
         auth: requests.auth.HTTPBasicAuth = requests.auth.HTTPBasicAuth("", ""),
-    ):
-        """ """
+    ) -> None:
+        """
+        VLC Class
+        This class will initialize a VLC instance by connect to it using REST API w/ HTTP Basic Auth.
+        This class is blocking.
+        If you want to use asynchornous version please install
+        `aiohttp <https://pypi.org/project/aiohttp/>`_
+        :param url: VLC url
+        :param auth: VLC auth
+        :return: None
+        """
         self.url = url
         self.auth = auth
         if not self.connectable:
             raise Exception("VLC is not running or REST API is not enabled")
 
     @property
-    def status(self):
+    def status(self) -> dict:
+        """
+        Show the status & configurations inform of a dictionaries
+        :return: dict
+        """
         return xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text,
         )
 
     @property
-    def playlist(self):
+    def playlist(self) -> dict:
+        """
+        Show the playlist and configurations inform of a dictionaries
+        :return: dict
+        """
         return xmltodict.parse(
             requests.get(self.url + "/requests/playlist.xml", auth=self.auth).text
         )
 
     @property
-    def connectable(self):
+    def connectable(self) -> bool:
+        """
+        Check if VLC REST API is running
+        :return: bool
+        """
         return (
             requests.get(self.url + "/requests/status.xml", auth=self.auth).status_code
             == 200
         )
 
-    def stop(self):
+    def stop(self) -> bool:
+        """
+        Stop the current playing media and return back the boolean of the result
+        :return: bool
+        """
         return (
             requests.get(
                 self.url + "/requests/status.xml?command=pl_stop", auth=self.auth
@@ -40,7 +74,11 @@ class VLC:
             == 200
         )
 
-    def clear_playlist(self):
+    def clear_playlist(self) -> bool:
+        """
+        Clear the playlist and return back the boolean of the result
+        :return: bool
+        """
         return (
             requests.get(
                 self.url + "/requests/status.xml?command=pl_empty", auth=self.auth
@@ -48,7 +86,12 @@ class VLC:
             == 200
         )
 
-    def play(self, uri: str):
+    def play(self, uri: str) -> bool:
+        """
+        Play a media by uri and return back the boolean of the result if success or not
+        :param uri: media uri
+        :return: bool
+        """
         return (
             requests.get(
                 self.url + "/requests/status.xml?command=in_play&input=" + uri,
@@ -57,7 +100,12 @@ class VLC:
             == 200
         )
 
-    def append_queue(self, uri: str):
+    def append_queue(self, uri: str) -> bool:
+        """
+        Append a media to the queue and return back the boolean of the result if success or not
+        :param uri: media uri
+        :return: bool
+        """
         return (
             requests.get(
                 self.url + "/requests/status.xml?command=in_enqueue&input=" + uri,
@@ -66,7 +114,12 @@ class VLC:
             == 200
         )
 
-    def set_volume(self, volume: int):
+    def set_volume(self, volume: int) -> bool:
+        """
+        Set the volume of VLC and return back the boolean of the result if success or not
+        :param volume: volume value (0-512 = 0-200%)
+        :return: bool
+        """
         return (
             requests.get(
                 self.url + "/requests/status.xml?command=volume&val=" + str(volume),
@@ -75,12 +128,13 @@ class VLC:
             == 200
         )
 
-    @property
-    def volume(self):
-        content = xmltodict.parse(requests.get(self.url + "/requests/status.xml").text)
-        return content["root"]["volume"]
+    def set_random(self, random: bool) -> bool:
+        """
+        Set the shuffle state of VLC and return back the boolean of the result if success or not
+        :param random: random state
+        :return: bool
+        """
 
-    def set_random(self, random: bool):
         return (
             requests.get(
                 self.url
@@ -92,13 +146,23 @@ class VLC:
         )
 
     @property
-    def is_random(self):
+    def is_random(self) -> bool:
+        """
+        A property to get the random state of VLC
+        :return: bool
+        """
         content = xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text
         )
-        return True if content["root"]["random"] == "1" else False
+        print(content["root"]["random"] in ("true", "1"))
+        return True if content["root"]["random"] in ("true", "1") else False
 
-    def set_repeat_media(self, repeat: bool):
+    def set_repeat_media(self, repeat: bool) -> bool:
+        """
+        Set the repeat state of VLC and return back the boolean of the result if success or not
+        :param repeat: repeat state
+        :return: bool
+        """
         return (
             requests.get(
                 self.url
@@ -110,13 +174,22 @@ class VLC:
         )
 
     @property
-    def is_repeat_media(self):
+    def is_repeat_media(self) -> bool:
+        """
+        A property to get the repeat state of VLC
+        :return: bool
+        """
         content = xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text
         )
-        return True if content["root"]["repeat"] == "1" else False
+        return True if content["root"]["repeat"] in ("true", "1") else False
 
-    def set_loop_queue(self, loop: bool):
+    def set_loop_queue(self, loop: bool) -> bool:
+        """
+        Set the loop state of VLC and return back the boolean of the result if success or not
+        :param loop: loop state
+        :return: bool
+        """
         return (
             requests.get(
                 self.url + "/requests/status.xml?command=pl_loop&state=" + str(loop),
@@ -126,13 +199,21 @@ class VLC:
         )
 
     @property
-    def is_loop_queue(self):
+    def is_loop_queue(self) -> bool:
+        """
+        A property to get the loop state of VLC
+        :return: bool
+        """
         content = xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text
         )
-        return True if content["root"]["loop"] == "1" else False
+        return True if content["root"]["loop"] in ("true", "1") else False
 
-    def fullscreen(self):
+    def fullscreen(self) -> bool:
+        """
+        Set the fullscreen state of VLC and return back the boolean of the result if success or not
+        :return: bool
+        """
         return (
             requests.get(
                 self.url + "/requests/status.xml?command=fullscreen", auth=self.auth
@@ -145,7 +226,8 @@ class VLC:
         content = xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text
         )
-        return True if content["root"]["fullscreen"] == "1" else False
+        print(content["root"]["fullscreen"] in ("true", "1"))
+        return True if content["root"]["fullscreen"] in ("true", "1") else False
 
     def set_subtitle_file(self, uri: str):
         return (
@@ -217,5 +299,60 @@ class VLC:
         content = xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text
         )
-        print(content)
         return True if content["root"]["state"] in ("paused", "stopped") else False
+
+    def seek(self, time: int):
+        return (
+            requests.get(
+                self.url + "/requests/status.xml?command=seek&val=" + str(time),
+                auth=self.auth,
+            ).status_code
+            == 200
+        )
+
+    @property
+    def time(self):
+        content = xmltodict.parse(
+            requests.get(self.url + "/requests/status.xml", auth=self.auth).text
+        )
+        return content["root"]["time"]
+
+    @property
+    def duration(self):
+        content = xmltodict.parse(
+            requests.get(self.url + "/requests/status.xml", auth=self.auth).text
+        )
+        return content["root"]["duration"]
+
+    @property
+    def position(self):
+        content = xmltodict.parse(
+            requests.get(self.url + "/requests/status.xml", auth=self.auth).text
+        )
+        return content["root"]["position"]
+
+    @property
+    def state(self):
+        content = xmltodict.parse(
+            requests.get(self.url + "/requests/status.xml", auth=self.auth).text
+        )
+        return content["root"]["state"]
+
+    @property
+    def volume(self):
+        content = xmltodict.parse(
+            requests.get(self.url + "/requests/status.xml", auth=self.auth).text
+        )
+        return content["root"]["volume"]
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+if not aiohttp_exists:
+    warnings.warn(
+        "aiohttp is not installed, so you can't use the async version of this library",
+        RuntimeWarning,
+    )
+    Async_VLC = None
+else:
+    pass
