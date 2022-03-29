@@ -18,5 +18,12 @@ pip install rest-vlc
 
 Intellisense should self-explainatory about it, or you can go to the [https://rest-vlc.readthedocs.io/en/latest/](https://rest-vlc.readthedocs.io/en/latest/) documentation.
 
+## Features
+
+- Asynchronous/Blocking API
+- Authenication
+- URL encoding automatically
+- Returns dictionary instead of XML
+
 ## Status
 Under Heavy development.

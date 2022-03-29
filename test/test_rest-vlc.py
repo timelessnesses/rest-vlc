@@ -2,8 +2,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 import os
-import pytest
 import sys
+
+import pytest
 
 sys.path.append("..")  # pytest problem?
 import rest_vlc
@@ -65,6 +66,8 @@ def test_loop():
 def test_fullscreen():
     assert vlc.fullscreen(), "Failed to set fullscreen"
     assert vlc.is_fullscreen, "Failed to set fullscreen"
+    assert vlc.fullscreen(), "Failed to set fullscreen"  # revert
+    assert not vlc.is_fullscreen, "Failed to set fullscreen"  # revert
 
 
 def test_browse():
@@ -85,6 +88,7 @@ def test_delete():
 
 def test_clear_history():
     assert vlc.clear_history(), "Failed to clear history"
+
 
 def test_seeking():
     assert vlc.seek(69), "Failed to seek"
