@@ -22,10 +22,16 @@ except ImportError or ModuleNotFoundError:
 
 
 class VLC:
+    """
+    VLC manager class
+    """
+
     def __init__(
         self,
         url: str = "http://localhost:8080",
-        auth: requests.auth.HTTPBasicAuth = requests.auth.HTTPBasicAuth("", ""),
+        auth: typing.Union[
+            tuple, requests.auth.HTTPBasicAuth, list, set
+        ] = requests.auth.HTTPBasicAuth("", ""),
     ) -> None:
         """
         VLC Class
@@ -38,7 +44,14 @@ class VLC:
         :return: None
         """
         self.url = url
-        self.auth = auth
+        if isinstance(auth, (tuple, list, set)):
+            if len(auth) != 2:
+                raise ValueError(
+                    "Auth must be a tuple or list of 2 elements which is username and password"
+                )
+            self.auth = requests.auth.HTTPBasicAuth(*auth)
+        else:
+            self.auth = auth
         if not self.connectable:
             raise Exception("VLC is not running or REST API is not enabled")
         self.full_screen = self.is_fullscreen
@@ -480,7 +493,9 @@ else:
         def __init__(
             self,
             url: str = "http://localhost:8080",
-            auth: aiohttp.HTTPBasicAuth = aiohttp.HTTPBasicAuth("", ""),
+            auth: typing.Union[aiohttp.BasicAuth, tuple, set, list] = aiohttp.BasicAuth(
+                "", ""
+            ),
         ) -> None:
             """
             VLC Class
@@ -493,7 +508,12 @@ else:
             :return: None
             """
             self.url = url
-            self.auth = auth
+            if isinstance(auth, (tuple, set, list)):
+                if len(auth) != 2:
+                    raise ValueError(
+                        "Auth must be tuple or list of length 2 which is username and password"
+                    )
+                self.auth = aiohttp.BasicAuth(*auth)
             if not self.connectable:
                 raise Exception("VLC is not running or REST API is not enabled")
             self.full_screen = self.is_fullscreen
