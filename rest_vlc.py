@@ -436,7 +436,7 @@ class VLC:
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-if aiohttp_exists:
+if not aiohttp_exists:
     warnings.warn(
         "aiohttp is not installed, so you can't use the async version of this library",
         RuntimeWarning,
