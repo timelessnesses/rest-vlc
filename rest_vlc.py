@@ -6,12 +6,12 @@ import warnings
 import requests
 import xmltodict
 
-try:
+try: # speedup
     import uvloop
 
     uvloop.install()
     import asyncio
-except ModuleNotFoundError or ImportError:
+except ModuleNotFoundError or ImportError: # no uvloop
     import asyncio
 try:
     import aiohttp
