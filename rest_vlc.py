@@ -2,16 +2,17 @@ import datetime
 import typing
 import urllib.parse
 import warnings
+import enum
 
 import requests
 import xmltodict
 
-try: # speedup
+try:  # speedup
     import uvloop
 
     uvloop.install()
     import asyncio
-except ModuleNotFoundError or ImportError: # no uvloop
+except ModuleNotFoundError or ImportError:  # no uvloop
     import asyncio
 try:
     import aiohttp
@@ -19,6 +20,12 @@ try:
     aiohttp_exists = True
 except ImportError or ModuleNotFoundError:
     aiohttp_exists = False
+
+
+class VLC_State(enum.Enum):
+    playing = "playing"
+    paused = "paused"
+    stopped = "stopped"
 
 
 class VLC:
@@ -59,6 +66,19 @@ class VLC:
     def __encode_uri(self, url: str) -> bool:
         return urllib.parse.quote(url)
 
+    def __set_name__(self, owner, name):
+        self.name = "_" + name
+
+    def __getattr__(self, name):
+        if name not in self.__dict__:
+            warnings.warn(
+                "Attribute '{}' is not defined in VLC class or not yet implemented".format(
+                    name
+                ),
+                UserWarning,
+            )
+            return None
+
     @property
     def status(self) -> dict:
         """
@@ -85,10 +105,15 @@ class VLC:
         Check if VLC REST API is running
         :return: bool
         """
-        return (
-            requests.get(self.url + "/requests/status.xml", auth=self.auth).status_code
-            == 200
-        )
+        try:
+            return (
+                requests.get(
+                    self.url + "/requests/status.xml", auth=self.auth
+                ).status_code
+                == 200
+            )
+        except requests.exceptions.ConnectionError:
+            return False
 
     def stop(self) -> bool:
         """
@@ -184,7 +209,6 @@ class VLC:
         content = xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text
         )
-        print(content["root"]["random"] in ("true", "1"))
         return True if content["root"]["random"] in ("true", "1") else False
 
     def set_repeat_media(self, repeat: bool) -> bool:
@@ -263,7 +287,6 @@ class VLC:
         content = xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text
         )
-        print(content["root"]["fullscreen"] in ("true", "1"))
         return True if content["root"]["fullscreen"] in ("true", "1") else False
 
     def set_subtitle_file(self, uri: str) -> bool:
@@ -412,7 +435,7 @@ class VLC:
         return content["root"]["position"]
 
     @property
-    def state(self) -> str:
+    def state(self) -> VLC_State:
         """
         Give current state of the playback.
         :return: str
@@ -420,7 +443,7 @@ class VLC:
         content = xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text
         )
-        return content["root"]["state"]
+        return VLC_State(content["root"]["state"])
 
     @property
     def volume(self) -> int:
@@ -518,8 +541,11 @@ else:
                 raise Exception("VLC is not running or REST API is not enabled")
             self.full_screen = self.is_fullscreen
 
-        async def __encode_uri(self, url: str) -> bool:
+        def __encode_uri(self, url: str) -> bool:
             return urllib.parse.quote(url)
+
+        def __set_name__(self, owner, name):
+            self.name = "_" + name
 
         @property
         def status(self) -> dict:
@@ -656,7 +682,6 @@ else:
                     aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
                 ).text
             )
-            print(content["root"]["random"] in ("true", "1"))
             return True if content["root"]["random"] in ("true", "1") else False
 
         async def set_repeat_media(self, repeat: bool) -> bool:
@@ -743,7 +768,6 @@ else:
                     aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
                 ).text
             )
-            print(content["root"]["fullscreen"] in ("true", "1"))
             return True if content["root"]["fullscreen"] in ("true", "1") else False
 
         async def set_subtitle_file(self, uri: str) -> bool:
@@ -903,7 +927,7 @@ else:
             return content["root"]["position"]
 
         @property
-        def state(self) -> str:
+        def state(self) -> VLC_State:
             """
             Give current state of the playback.
             :return: str
@@ -913,7 +937,7 @@ else:
                     aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
                 ).text
             )
-            return content["root"]["state"]
+            return VLC_State(content["root"]["state"])
 
         @property
         def volume(self) -> int:
