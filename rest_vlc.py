@@ -1,8 +1,8 @@
 import datetime
+import enum
 import typing
 import urllib.parse
 import warnings
-import enum
 
 import requests
 import xmltodict
@@ -78,6 +78,19 @@ class VLC:
                 UserWarning,
             )
             return None
+
+    @property
+    def is_playing(self):
+        """
+        Check if VLC is playing or not
+        :return: bool
+        """
+        return (
+            requests.get(
+                self.url + "/requests/status.xml?command=pl_status", auth=self.auth
+            )
+            == 200
+        )
 
     @property
     def status(self) -> dict:
@@ -263,7 +276,7 @@ class VLC:
         )
         return True if content["root"]["loop"] in ("true", "1") else False
 
-    def fullscreen(self) -> bool:
+    def fullscreen(self) -> list:
         """
         Set the fullscreen state of VLC and return back the boolean of the result if success or not and the current state of the screen
         :return: bool, bool
@@ -951,3 +964,16 @@ else:
                 ).text
             )
             return content["root"]["volume"]
+
+        @property
+        def is_playing(self):
+            """
+            Check if VLC is playing or not
+            :return: bool
+            """
+            content = xmltodict.parse(
+                asyncio.run(
+                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
+                )
+            )
+            return True if content["root"]["state"] in ("playing", "paused") else False
