@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 import sys
-
+import time
 import pytest
 
 sys.path.append("..")  # pytest problem?
@@ -14,10 +14,8 @@ vlc = rest_vlc.VLC(auth=("", os.environ["VLC_PASSWORD"]))
 
 @pytest.fixture
 def x():
-    yield
-    import time
-
-    time.sleep(0.2)
+    print("Start testing")
+    time.sleep(0.8)
 
 
 def test_low_volume():
@@ -45,7 +43,7 @@ def test_play():
 
 
 def test_append():
-    vlc.append_queue(os.environ["VLC_URI2"]), "Failed to append"
+    assert vlc.append_queue(os.environ["VLC_URI2"]), "Failed to append"
 
 
 def test_random():
