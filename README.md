@@ -16,7 +16,8 @@ pip install rest-vlc
 
 ## Documentation
 
-Intellisense should self-explainatory about it, or you can go to the [https://rest-vlc.readthedocs.io/en/latest/](https://rest-vlc.readthedocs.io/en/latest/) documentation.
+Intellisense should self-explainatory about it, or you can go to the [https://rest-vlc.readthedocs.io/en/latest/](https://rest-vlc.readthedocs.io/en/latest/) documentation.  
+Examples are in tests/ and examples/
 
 ## Features
 
@@ -26,4 +27,4 @@ Intellisense should self-explainatory about it, or you can go to the [https://re
 - Returns dictionary instead of XML
 
 ## Status
-Under Heavy development.
+Stable
