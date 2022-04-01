@@ -79,7 +79,7 @@ class VLC:
                 ),
                 UserWarning,
             )
-            return None
+            return (None,)
 
     @property
     def is_playing(self):
@@ -594,12 +594,17 @@ else:
             Check if VLC REST API is running
             :return: bool
             """
-            return (
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).status_code
-                == 200
-            )
+            try:
+                return (
+                    asyncio.run(
+                        aiohttp_wrap.get(
+                            self.url + "/requests/status.xml", auth=self.auth
+                        )
+                    ).status_code
+                    == 200
+                )
+            except aiohttp.client_exceptions.ClientConnectorError:
+                return False
 
         async def stop(self) -> bool:
             """
