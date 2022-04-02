@@ -6,6 +6,10 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/timelessnesses/rest-vlc.git
+cd rest-vlc
+pip install .
+# OR
+pip install git+https://github.com/timelessnesses/rest-vlc.git
 ```
 
 or use the production release:
