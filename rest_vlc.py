@@ -503,6 +503,7 @@ else:
                 async with session.get(*args, **kwargs) as response:
                     d = dummy()
                     d.status = response.status
+                    d.status_code = response.status
                     d.text = await response.text()
             return d
 
@@ -511,6 +512,7 @@ else:
                 async with session.post(*args, **kwargs) as response:
                     d = dummy()
                     d.status = response.status
+                    d.status_code = response.status
                     d.text = await response.text()
             return d
 
@@ -519,6 +521,7 @@ else:
                 async with session.put(*args, **kwargs) as response:
                     d = dummy()
                     d.status = response.status
+                    d.status_code = response.status
                     d.text = await response.text()
             return d
 
@@ -527,6 +530,7 @@ else:
                 async with session.patch(*args, **kwargs) as response:
                     d = dummy()
                     d.status = response.status
+                    d.status_code = response.status
                     d.text = await response.text()
             return d
 
@@ -535,6 +539,7 @@ else:
                 async with session.delete(*args, **kwargs) as response:
                     d = dummy()
                     d.status = response.status
+                    d.status_code = response.status
                     d.text = await response.text()
             return d
 
