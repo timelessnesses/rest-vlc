@@ -4,6 +4,7 @@ load_dotenv()
 import os
 import sys
 import time
+
 import pytest
 
 sys.path.append("..")  # pytest problem?
@@ -14,8 +15,7 @@ vlc = rest_vlc.VLC(auth=("", os.environ["VLC_PASSWORD"]))
 
 @pytest.fixture
 def x():
-    print("Start testing")
-    time.sleep(0.8)
+    pass
 
 
 def test_low_volume():
