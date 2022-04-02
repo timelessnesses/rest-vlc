@@ -498,7 +498,7 @@ else:
         pass
 
     class aiohttp_wrap:
-        async def get(*args, **kwargs):
+        async def get(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.get(*args, **kwargs) as response:
                     d = dummy()
@@ -507,7 +507,7 @@ else:
                     d.text = await response.text()
             return d
 
-        async def post(*args, **kwargs):
+        async def post(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.post(*args, **kwargs) as response:
                     d = dummy()
@@ -516,7 +516,7 @@ else:
                     d.text = await response.text()
             return d
 
-        async def put(*args, **kwargs):
+        async def put(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.put(*args, **kwargs) as response:
                     d = dummy()
@@ -525,7 +525,7 @@ else:
                     d.text = await response.text()
             return d
 
-        async def patch(*args, **kwargs):
+        async def patch(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.patch(*args, **kwargs) as response:
                     d = dummy()
@@ -534,7 +534,7 @@ else:
                     d.text = await response.text()
             return d
 
-        async def delete(*args, **kwargs):
+        async def delete(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.delete(*args, **kwargs) as response:
                     d = dummy()
@@ -542,6 +542,8 @@ else:
                     d.status_code = response.status
                     d.text = await response.text()
             return d
+
+    aiohttp_wrap = aiohttp_wrap()
 
     class Async_VLC:
         def __init__(
