@@ -498,7 +498,7 @@ else:
         pass
 
     class aiohttp_wrap:
-        async def get(*args, **kwargs):
+        async def get(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.get(*args, **kwargs) as response:
                     d = dummy()
@@ -507,7 +507,7 @@ else:
                     d.text = await response.text()
             return d
 
-        async def post(*args, **kwargs):
+        async def post(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.post(*args, **kwargs) as response:
                     d = dummy()
@@ -516,7 +516,7 @@ else:
                     d.text = await response.text()
             return d
 
-        async def put(*args, **kwargs):
+        async def put(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.put(*args, **kwargs) as response:
                     d = dummy()
@@ -525,7 +525,7 @@ else:
                     d.text = await response.text()
             return d
 
-        async def patch(*args, **kwargs):
+        async def patch(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.patch(*args, **kwargs) as response:
                     d = dummy()
@@ -534,7 +534,7 @@ else:
                     d.text = await response.text()
             return d
 
-        async def delete(*args, **kwargs):
+        async def delete(self, *args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.delete(*args, **kwargs) as response:
                     d = dummy()
@@ -542,6 +542,8 @@ else:
                     d.status_code = response.status
                     d.text = await response.text()
             return d
+
+    aiohttp_wrap = aiohttp_wrap()
 
     class Async_VLC:
         def __init__(
@@ -627,24 +629,20 @@ else:
             Stop the current playing media and return back the boolean of the result
             :return: bool
             """
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=pl_stop", auth=self.auth
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=pl_stop", auth=self.auth
             )
+            return d.status_code == 200
 
         async def clear_playlist(self) -> bool:
             """
             Clear the playlist and return back the boolean of the result
             :return: bool
             """
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=pl_empty", auth=self.auth
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=pl_empty", auth=self.auth
             )
+            return d.status_code == 200
 
         async def play(self, uri: str) -> bool:
             """
@@ -653,13 +651,11 @@ else:
             :return: bool
             """
             uri = self.__encode_uri(uri)
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=in_play&input=" + uri,
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=in_play&input=" + uri,
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         async def append_queue(self, uri: str) -> bool:
             """
@@ -668,13 +664,11 @@ else:
             :return: bool
             """
             uri = self.__encode_uri(uri)
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=in_enqueue&input=" + uri,
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=in_enqueue&input=" + uri,
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         async def set_volume(self, volume: int) -> bool:
             """
@@ -682,13 +676,11 @@ else:
             :param volume: volume value (0-512 = 0-200%)
             :return: bool
             """
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=volume&val=" + str(volume),
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=volume&val=" + str(volume),
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         async def set_random(self, random: bool) -> bool:
             """
@@ -696,16 +688,13 @@ else:
             :param random: random state
             :return: bool
             """
-
-            return (
-                await aiohttp_wrap.get(
-                    self.url
-                    + "/requests/status.xml?command=pl_random&state="
-                    + str(random),
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url
+                + "/requests/status.xml?command=pl_random&state="
+                + str(random).lower(),
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         @property
         def is_random(self) -> bool:
@@ -726,15 +715,13 @@ else:
             :param repeat: repeat state
             :return: bool
             """
-            return (
-                await aiohttp_wrap.get(
-                    self.url
-                    + "/requests/status.xml?command=pl_repeat&state="
-                    + str(repeat),
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url
+                + "/requests/status.xml?command=pl_repeat&state="
+                + str(repeat).lower(),
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         @property
         def is_repeat_media(self) -> bool:
@@ -755,15 +742,13 @@ else:
             :param loop: loop state
             :return: bool
             """
-            return (
-                await aiohttp_wrap.get(
-                    self.url
-                    + "/requests/status.xml?command=pl_loop&state="
-                    + str(loop),
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url
+                + "/requests/status.xml?command=pl_loop&state="
+                + str(loop).lower(),
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         @property
         def is_loop_queue(self) -> bool:
@@ -783,11 +768,11 @@ else:
             Set the fullscreen state of VLC and return back the boolean of the result if success or not and the current state of the screen
             :return: bool, bool
             """
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=fullscreen", auth=self.auth
+            )
             return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=fullscreen", auth=self.auth
-                ).status_code
-                == 200,
+                d.status_code == 200,
                 self.is_fullscreen,
             )
 
@@ -812,13 +797,11 @@ else:
             :return: bool
             """
             uri = self.__encode_uri(uri)
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=pl_enqueue&input=" + uri,
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=pl_enqueue&input=" + uri,
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         async def browse(self, uri: str) -> dict:
             """
@@ -826,74 +809,61 @@ else:
             :return: dict
             """
             uri = self.__encode_uri(uri)
-            return xmltodict.parse(
-                await aiohttp_wrap.get(
-                    self.url + "/requests/browse.xml?uri=" + uri
-                ).text
-            )
+            d = await aiohttp_wrap.get(self.url + "/requests/browse.xml?uri=" + uri)
+            return xmltodict.parse(d.text)
 
         async def previous(self) -> bool:
             """
             Revert to previous media and return if request was successful or not
             :return: bool
             """
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=pl_previous",
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=pl_previous",
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         async def delete(self, uri: str) -> bool:
             """
             Delete media off the playlist by finding with the specified URI. Returns bool indicate if request was successful or not
             """
             uri = self.__encode_uri(uri)
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=pl_delete&id=" + uri,
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=pl_delete&id=" + uri,
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         async def next(self) -> bool:
             """
             Skip to next media and return if request was successful or not
             :return: bool
             """
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=pl_next", auth=self.auth
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=pl_next", auth=self.auth
             )
+            return d.status_code == 200
 
         async def clear_history(self) -> bool:
             """
             Clear the histories. Returns boolean indicate request is successful or not
             :return: bool
             """
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=pl_history&val=clear",
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=pl_history&val=clear",
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         async def pause(self) -> bool:
             """
             Pause the media playback. Returns bool indicate request was successful or not
             :return: bool
             """
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=pl_pause", auth=self.auth
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=pl_pause", auth=self.auth
             )
+            return d.status_code == 200
 
         @property
         def is_paused(self) -> bool:
@@ -915,13 +885,11 @@ else:
             """
             if isinstance(time, datetime.timedelta):
                 time = time.total_seconds()
-            return (
-                await aiohttp_wrap.get(
-                    self.url + "/requests/status.xml?command=seek&val=" + str(time),
-                    auth=self.auth,
-                ).status_code
-                == 200
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml?command=seek&val=" + str(time),
+                auth=self.auth,
             )
+            return d.status_code == 200
 
         @property
         def time(self) -> int:
