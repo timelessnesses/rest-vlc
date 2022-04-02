@@ -21,8 +21,6 @@ try:
 except ImportError or ModuleNotFoundError:
     aiohttp_exists = False
 
-__version__ = "1.0.0"
-
 
 class VLC_State(enum.Enum):
     playing = "playing"
