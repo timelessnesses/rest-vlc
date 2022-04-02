@@ -494,41 +494,49 @@ if not aiohttp_exists:
 
 else:
 
+    class dummy:
+        pass
+
     class aiohttp_wrap:
         async def get(*args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.get(*args, **kwargs) as response:
-                    pass
-            response.status_code = response.status
-            return response
+                    d = dummy()
+                    d.status_code = response.status
+                    d.text = await response.text()
+            return d
 
         async def post(*args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.post(*args, **kwargs) as response:
-                    pass
-            response.status_code = response.status
-            return response
+                    d = dummy()
+                    d.status_code = response.status
+                    d.text = await response.text()
+            return d
 
         async def put(*args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.put(*args, **kwargs) as response:
-                    pass
-            response.status_code = response.status
-            return response
+                    d = dummy()
+                    d.status_code = response.status
+                    d.text = await response.text()
+            return d
 
         async def patch(*args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.patch(*args, **kwargs) as response:
-                    pass
-            response.status_code = response.status
-            return response
+                    d = dummy()
+                    d.status_code = response.status
+                    d.text = await response.text()
+            return d
 
         async def delete(*args, **kwargs):
             async with aiohttp.ClientSession() as session:
                 async with session.delete(*args, **kwargs) as response:
-                    pass
-            response.status_code = response.status
-            return response
+                    d = dummy()
+                    d.status_code = response.status
+                    d.text = await response.text()
+            return d
 
     class Async_VLC:
         def __init__(
