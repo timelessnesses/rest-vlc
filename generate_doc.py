@@ -11,12 +11,12 @@ def get_func_args(function):
     return inspect.getfullargspec(function).args
 
 
-def remove_indentation(text):
-    return text.replace("    ", "")
+def remove_indent_and_new_line(text):
+    return text.replace("    ", "").replace("\n","  \n")
 
 
 def doc_to_markdown(function):
-    return f"## `rest_vlc.VLC.{function.__name__}({','.join(get_func_args(function))})`  \n{remove_indentation(function.__doc__)}\n"
+    return f"## `rest_vlc.VLC.{function.__name__}({','.join(get_func_args(function))})`  \n{remove_indent_and_new_line(function.__doc__)}\n"
 
 
 markdown = "# VLC REST API  Here's list of APIS  \n"
@@ -83,7 +83,7 @@ properties = {
 
 for property in properties:
     markdown += (
-        f"## `rest_vlc.VLC.{property}`  \n{remove_indentation(properties[property])}\n"
+        f"## `rest_vlc.VLC.{property}`  \n{remove_indent_and_new_line(properties[property])}\n"
     )
 
 for function in rest_vlc.VLC.__dict__.values():
@@ -100,11 +100,11 @@ markdown = "# Async VLC REST API  Here's list of async APIS  \n"
 
 
 def async_doc_to_markdown(function):
-    return f"## `await rest_vlc.Async_VLC.{function.__name__}({', '.join(get_func_args(function))})`  \n{remove_indentation(function.__doc__)}\n"
+    return f"## `await rest_vlc.Async_VLC.{function.__name__}({', '.join(get_func_args(function))})`  \n{remove_indent_and_new_line(function.__doc__)}\n"
 
 
 for property in properties:
-    markdown += f"## `rest_vlc.Async_VLC.{property}`  \n{remove_indentation(properties[property])}\n"
+    markdown += f"## `rest_vlc.Async_VLC.{property}`  \n{remove_indent_and_new_line(properties[property])}\n"
 
 for function in rest_vlc.Async_VLC.__dict__.values():
     if callable(function) and function.__doc__:
