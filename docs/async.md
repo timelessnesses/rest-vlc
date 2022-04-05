@@ -102,10 +102,11 @@ Append a media to the queue and return back the boolean of the result if success
 :param uri: media uri
 :return: bool
 
-## `await rest_vlc.Async_VLC.set_volume(self, volume)`  
+## `await rest_vlc.Async_VLC.set_volume(self, volume, percent)`  
 
 Set the volume of VLC and return back the boolean of the result if success or not
 :param volume: volume value (0-512 = 0-200%)
+:param percent: option for volume is actually percentage or not
 :return: bool
 
 ## `await rest_vlc.Async_VLC.set_random(self, random)`  

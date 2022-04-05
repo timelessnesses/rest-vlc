@@ -62,6 +62,7 @@ class VLC:
         if not self.connectable:
             raise Exception("VLC is not running or REST API is not enabled")
         self.full_screen = self.is_fullscreen
+        self.volume_percentage = False
 
     def __encode_uri(self, url: str) -> bool:
         return urllib.parse.quote(url)
@@ -182,12 +183,15 @@ class VLC:
             == 200
         )
 
-    def set_volume(self, volume: int) -> bool:
+    def set_volume(self, volume: int, percent: bool = False) -> bool:
         """
         Set the volume of VLC and return back the boolean of the result if success or not
         :param volume: volume value (0-512 = 0-200%)
+        :param percent: option for volume is actually percentage or not
         :return: bool
         """
+        if percent:
+            volume = int(volume * 2.56)
         return (
             requests.get(
                 self.url + "/requests/status.xml?command=volume&val=" + str(volume),
@@ -459,7 +463,7 @@ class VLC:
         return VLC_State(content["root"]["state"])
 
     @property
-    def volume(self) -> int:
+    def volume(self) -> typing.Union[int, float]:
         """
         Get current playback's volume (0-512)
         :return: int
@@ -467,7 +471,10 @@ class VLC:
         content = xmltodict.parse(
             requests.get(self.url + "/requests/status.xml", auth=self.auth).text
         )
-        return content["root"]["volume"]
+        if self.volume_percentage:
+            return float(content["root"]["volume"] / 2.56)
+        else:
+            return int(content["root"]["volume"])
 
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -670,12 +677,15 @@ else:
             )
             return d.status_code == 200
 
-        async def set_volume(self, volume: int) -> bool:
+        async def set_volume(self, volume: int, percent: bool = False) -> bool:
             """
             Set the volume of VLC and return back the boolean of the result if success or not
             :param volume: volume value (0-512 = 0-200%)
+            :param percent: option for volume is actually percentage or not
             :return: bool
             """
+            if percent:
+                volume = int(volume * 2.56)
             d = await aiohttp_wrap.get(
                 self.url + "/requests/status.xml?command=volume&val=" + str(volume),
                 auth=self.auth,
@@ -944,17 +954,21 @@ else:
             return VLC_State(content["root"]["state"])
 
         @property
-        def volume(self) -> int:
+        def volume(self) -> typing.Union[int, float]:
             """
             Get current playback's volume (0-512)
             :return: int
             """
+
             content = xmltodict.parse(
                 asyncio.run(
                     aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
                 ).text
             )
-            return content["root"]["volume"]
+            if self.volume_percentage:
+                return float(content["root"]["volume"] / 2.56)
+            else:
+                return int(content["root"]["volume"])
 
         @property
         def is_playing(self):

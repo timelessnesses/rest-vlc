@@ -102,10 +102,11 @@ Append a media to the queue and return back the boolean of the result if success
 :param uri: media uri
 :return: bool
 
-## `rest_vlc.VLC.set_volume(self,volume)`  
+## `rest_vlc.VLC.set_volume(self,volume,percent)`  
 
 Set the volume of VLC and return back the boolean of the result if success or not
 :param volume: volume value (0-512 = 0-200%)
+:param percent: option for volume is actually percentage or not
 :return: bool
 
 ## `rest_vlc.VLC.set_random(self,random)`  
