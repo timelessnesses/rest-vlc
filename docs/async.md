@@ -67,6 +67,7 @@ Give current state of the playback.
 ## `rest_vlc.VLC.volume`  
   
 Get current playback's volume (0-512)  
+If you want percentage returns then set the property of `volume_percentage` to `True`  
 :return: int  
 
 ## `rest_vlc.VLC.__init__(self,url,auth)`  
