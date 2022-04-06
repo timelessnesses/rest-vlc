@@ -1,26 +1,4 @@
 # Async VLC REST API  Here's list of async APIS  
-## `rest_vlc.VLC.__module__`  
-str(object='') -> str  
-str(bytes_or_buffer[, encoding[, errors]]) -> str  
-  
-Create a new string object from the given object. If encoding or  
-errors is specified, then the object must expose a data buffer  
-that will be decoded using the given encoding and error handler.  
-Otherwise, returns the result of object.__str__() (if defined)  
-or repr(object).  
-encoding defaults to sys.getdefaultencoding().  
-errors defaults to 'strict'.
-## `rest_vlc.VLC.__doc__`  
-str(object='') -> str  
-str(bytes_or_buffer[, encoding[, errors]]) -> str  
-  
-Create a new string object from the given object. If encoding or  
-errors is specified, then the object must expose a data buffer  
-that will be decoded using the given encoding and error handler.  
-Otherwise, returns the result of object.__str__() (if defined)  
-or repr(object).  
-encoding defaults to sys.getdefaultencoding().  
-errors defaults to 'strict'.
 ## `rest_vlc.VLC.is_playing`  
   
 Check if VLC is playing or not  
@@ -91,10 +69,6 @@ Give current state of the playback.
 Get current playback's volume (0-512)  
 :return: int  
 
-## `rest_vlc.VLC.__dict__`  
-dictionary for instance variables (if defined)
-## `rest_vlc.VLC.__weakref__`  
-list of weak references to the object (if defined)
 ## `rest_vlc.VLC.__init__(self,url,auth)`  
   
 VLC Class  
@@ -106,93 +80,93 @@ If you want to use asynchornous version please install
 :param auth: VLC auth  
 :return: None  
 
-## `rest_vlc.VLC.stop(self)`  
+## `await rest_vlc.Async_VLC.stop(self)`  
   
 Stop the current playing media and return back the boolean of the result  
 :return: bool  
 
-## `rest_vlc.VLC.clear_playlist(self)`  
+## `await rest_vlc.Async_VLC.clear_playlist(self)`  
   
 Clear the playlist and return back the boolean of the result  
 :return: bool  
 
-## `rest_vlc.VLC.play(self,uri)`  
+## `await rest_vlc.Async_VLC.play(self, uri)`  
   
 Play a media by uri and return back the boolean of the result if success or not  
 :param uri: media uri  
 :return: bool  
 
-## `rest_vlc.VLC.append_queue(self,uri)`  
+## `await rest_vlc.Async_VLC.append_queue(self, uri)`  
   
 Append a media to the queue and return back the boolean of the result if success or not  
 :param uri: media uri  
 :return: bool  
 
-## `rest_vlc.VLC.set_volume(self,volume,percent)`  
+## `await rest_vlc.Async_VLC.set_volume(self, volume, percent)`  
   
 Set the volume of VLC and return back the boolean of the result if success or not  
 :param volume: volume value (0-512 = 0-200%)  
 :param percent: option for volume is actually percentage or not  
 :return: bool  
 
-## `rest_vlc.VLC.set_random(self,random)`  
+## `await rest_vlc.Async_VLC.set_random(self, random)`  
   
 Set the shuffle state of VLC and return back the boolean of the result if success or not  
 :param random: random state  
 :return: bool  
 
-## `rest_vlc.VLC.set_repeat_media(self,repeat)`  
+## `await rest_vlc.Async_VLC.set_repeat_media(self, repeat)`  
   
 Set the repeat state of VLC and return back the boolean of the result if success or not  
 :param repeat: repeat state  
 :return: bool  
 
-## `rest_vlc.VLC.set_loop_queue(self,loop)`  
+## `await rest_vlc.Async_VLC.set_loop_queue(self, loop)`  
   
 Set the loop state of VLC and return back the boolean of the result if success or not  
 :param loop: loop state  
 :return: bool  
 
-## `rest_vlc.VLC.fullscreen(self)`  
+## `await rest_vlc.Async_VLC.fullscreen(self)`  
   
 Set the fullscreen state of VLC and return back the boolean of the result if success or not and the current state of the screen  
 :return: bool, bool  
 
-## `rest_vlc.VLC.set_subtitle_file(self,uri)`  
+## `await rest_vlc.Async_VLC.set_subtitle_file(self, uri)`  
   
 Set the subtitle file to show in the VLC and returns bool based on successful or not  
 :return: bool  
 
-## `rest_vlc.VLC.browse(self,uri)`  
+## `await rest_vlc.Async_VLC.browse(self, uri)`  
   
 Give the list of the files and return the dictionaries of XML  
 :return: dict  
 
-## `rest_vlc.VLC.previous(self)`  
+## `await rest_vlc.Async_VLC.previous(self)`  
   
 Revert to previous media and return if request was successful or not  
 :return: bool  
 
-## `rest_vlc.VLC.delete(self,uri)`  
+## `await rest_vlc.Async_VLC.delete(self, uri)`  
   
 Delete media off the playlist by finding with the specified URI. Returns bool indicate if request was successful or not  
 
-## `rest_vlc.VLC.next(self)`  
+## `await rest_vlc.Async_VLC.next(self)`  
   
 Skip to next media and return if request was successful or not  
 :return: bool  
 
-## `rest_vlc.VLC.clear_history(self)`  
+## `await rest_vlc.Async_VLC.clear_history(self)`  
   
 Clear the histories. Returns boolean indicate request is successful or not  
 :return: bool  
 
-## `rest_vlc.VLC.pause(self)`  
+## `await rest_vlc.Async_VLC.pause(self)`  
   
 Pause the media playback. Returns bool indicate request was successful or not  
 :return: bool  
 
-## `rest_vlc.VLC.seek(self,time)`  
+## `await rest_vlc.Async_VLC.seek(self, time)`  
   
 Seeking between time in the media with required arg is time which is supported int,str and datetime.timedelta. Returns bool indicate requests was successful or not  
 :return: bool  

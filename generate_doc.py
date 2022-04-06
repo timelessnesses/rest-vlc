@@ -27,7 +27,11 @@ for property, val in rest_vlc.VLC.__dict__.items():
         markdown += f"## `rest_vlc.VLC.{property}`  \n{remove_indent_and_new_line(val.__doc__)}\n"
 
 for function in rest_vlc.VLC.__dict__.items():
-    if callable(function) and function.__doc__:
+    if (
+        callable(function)
+        and function.__doc__
+        and not function.__name__.startswith("_")
+    ):
         markdown += doc_to_markdown(function)
 markdown += "  \n## Async  \n[Click this to go to the async version](https://rest-vlc.readthedocs.io/en/latest/async)"
 markdown = markdown.lstrip()
@@ -44,13 +48,17 @@ def async_doc_to_markdown(function):
 
 
 for property, val in rest_vlc.VLC.__dict__.items():
-    if not callable(val):
+    if not callable(val) and not property.startswith("__"):
         markdown += f"## `rest_vlc.VLC.{property}`  \n{remove_indent_and_new_line(val.__doc__)}\n"
 
 for function in rest_vlc.Async_VLC.__dict__.values():
-    if callable(function) and function.__doc__ and inspect.isawaitable(function):
+    if (
+        callable(function)
+        and function.__doc__
+        and not function.__name__.startswith("__")
+    ):
         markdown += async_doc_to_markdown(function)
-    elif callable(function) and function.__doc__:
+    elif "__init__" in str(function):
         markdown += doc_to_markdown(function)
 
 with open("./docs/async.md", "w") as f:
