@@ -27,11 +27,7 @@ for property, val in rest_vlc.VLC.__dict__.items():
         markdown += f"## `rest_vlc.VLC.{property}`  \n{remove_indent_and_new_line(val.__doc__)}\n"
 
 for function in rest_vlc.VLC.__dict__.items():
-    if (
-        callable(function)
-        and function.__doc__
-        and not function.__name__.startswith("_")
-    ):
+    if callable(function) and function.__doc__ and not function.__name__.endswith("__"):
         markdown += doc_to_markdown(function)
 markdown += "  \n## Async  \n[Click this to go to the async version](https://rest-vlc.readthedocs.io/en/latest/async)"
 markdown = markdown.lstrip()
