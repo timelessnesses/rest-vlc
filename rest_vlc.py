@@ -466,6 +466,7 @@ class VLC:
     def volume(self) -> typing.Union[int, float]:
         """
         Get current playback's volume (0-512)
+        If you want percentage returns then set the property of `volume_percentage` to `True`
         :return: int
         """
         content = xmltodict.parse(
@@ -957,6 +958,7 @@ else:
         def volume(self) -> typing.Union[int, float]:
             """
             Get current playback's volume (0-512)
+            If you want percentage returns then set the property of `volume_percentage` to `True`
             :return: int
             """
 
