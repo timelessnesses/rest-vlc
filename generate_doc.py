@@ -21,13 +21,18 @@ def doc_to_markdown(function):
 
 markdown = "# VLC REST API  Here's list of APIS  \n"
 
-
 for property, val in rest_vlc.VLC.__dict__.items():
-    if not callable(val):
+    if not callable(val) and not property.startswith("__"):
         markdown += f"## `rest_vlc.VLC.{property}`  \n{remove_indent_and_new_line(val.__doc__)}\n"
 
-for function in rest_vlc.VLC.__dict__.items():
-    if callable(function) and function.__doc__ and not function.__name__.endswith("__"):
+for function in rest_vlc.VLC.__dict__.values():
+    if (
+        callable(function)
+        and function.__doc__
+        and not function.__name__.startswith("__")
+    ):
+        markdown += doc_to_markdown(function)
+    elif "__init__" in str(function):
         markdown += doc_to_markdown(function)
 markdown += "  \n## Async  \n[Click this to go to the async version](https://rest-vlc.readthedocs.io/en/latest/async)"
 markdown = markdown.lstrip()
