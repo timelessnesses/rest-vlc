@@ -79,6 +79,7 @@ class VLC:
                 UserWarning,
             )
             return (None,)
+        return self.__dict__[name]
 
     @property
     def is_playing(self):
@@ -587,6 +588,17 @@ else:
 
         def __set_name__(self, owner, name):
             self.name = "_" + name
+
+        def __getattr__(self, name):
+            if name not in self.__dict__:
+                warnings.warn(
+                    "Attribute '{}' is not defined in VLC class or not yet implemented".format(
+                        name
+                    ),
+                    UserWarning,
+                )
+                return (None,)
+            return self.__dict__[name]
 
         @property
         def status(self) -> dict:
