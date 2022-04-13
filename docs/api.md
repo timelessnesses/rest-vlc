@@ -133,11 +133,6 @@ Set the loop state of VLC and return back the boolean of the result if success o
 Set the fullscreen state of VLC and return back the boolean of the result if success or not and the current state of the screen  
 :return: bool, bool  
 
-## `rest_vlc.VLC.set_subtitle_file(self,uri)`  
-  
-Set the subtitle file to show in the VLC and returns bool based on successful or not  
-:return: bool  
-
 ## `rest_vlc.VLC.browse(self,uri)`  
   
 Give the list of the files and return the dictionaries of XML  

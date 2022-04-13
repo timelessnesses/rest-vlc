@@ -131,12 +131,7 @@ Set the loop state of VLC and return back the boolean of the result if success o
 ## `await rest_vlc.Async_VLC.fullscreen(self)`  
   
 Set the fullscreen state of VLC and return back the boolean of the result if success or not and the current state of the screen  
-:return: bool, bool  
-
-## `await rest_vlc.Async_VLC.set_subtitle_file(self, uri)`  
-  
-Set the subtitle file to show in the VLC and returns bool based on successful or not  
-:return: bool  
+:return: (bool, bool)  
 
 ## `await rest_vlc.Async_VLC.browse(self, uri)`  
   
