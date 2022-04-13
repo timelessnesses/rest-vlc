@@ -307,19 +307,19 @@ class VLC:
         )
         return True if content["root"]["fullscreen"] in ("true", "1") else False
 
-    def set_subtitle_file(self, uri: str) -> bool:
-        """
+    """ def set_subtitle_file(self, uri: str) -> bool:
+        \"""
         Set the subtitle file to show in the VLC and returns bool based on successful or not
         :return: bool
-        """
-        uri = self.__encode_uri(uri)
+        \"""
+        \""" uri = self.__encode_uri(uri) \"""
         return (
             requests.get(
                 self.url + "/requests/status.xml?command=pl_enqueue&input=" + uri,
                 auth=self.auth,
             ).status_code
             == 200
-        )
+        ) """
 
     def browse(self, uri: str) -> dict:
         """
@@ -581,7 +581,7 @@ else:
                 self.auth = aiohttp.BasicAuth(*auth)
             if not self.connectable:
                 raise Exception("VLC is not running or REST API is not enabled")
-            self.full_screen = self.is_fullscreen
+            self.full_screen = None
 
         def __encode_uri(self, url: str) -> bool:
             return urllib.parse.quote(url)
@@ -601,46 +601,38 @@ else:
             return self.__dict__[name]
 
         @property
-        def status(self) -> dict:
+        async def status(self) -> dict:
             """
             Show the status & configurations inform of a dictionaries
             :return: dict
             """
-            return xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text,
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            return xmltodict.parse(d.text)
 
         @property
-        def playlist(self) -> dict:
+        async def playlist(self) -> dict:
             """
             Show the playlist and configurations inform of a dictionaries
             :return: dict
             """
-            return xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(
-                        self.url + "/requests/playlist.xml", auth=self.auth
-                    )
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/playlist.xml", auth=self.auth
             )
+            return xmltodict.parse(d.text)
 
         @property
-        def connectable(self) -> bool:
+        async def connectable(self) -> bool:
             """
             Check if VLC REST API is running
             :return: bool
             """
             try:
-                return (
-                    asyncio.run(
-                        aiohttp_wrap.get(
-                            self.url + "/requests/status.xml", auth=self.auth
-                        )
-                    ).status_code
-                    == 200
+                d = await aiohttp_wrap.get(
+                    self.url + "/requests/status.xml", auth=self.auth
                 )
+                return d.status_code == 200
             except aiohttp.client_exceptions.ClientConnectorError:
                 return False
 
@@ -720,16 +712,15 @@ else:
             return d.status_code == 200
 
         @property
-        def is_random(self) -> bool:
+        async def is_random(self) -> bool:
             """
             A property to get the random state of VLC
             :return: bool
             """
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            content = xmltodict.parse(d.text)
             return True if content["root"]["random"] in ("true", "1") else False
 
         async def set_repeat_media(self, repeat: bool) -> bool:
@@ -747,16 +738,15 @@ else:
             return d.status_code == 200
 
         @property
-        def is_repeat_media(self) -> bool:
+        async def is_repeat_media(self) -> bool:
             """
             A property to get the repeat state of VLC
             :return: bool
             """
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            content = xmltodict.parse(d.text)
             return True if content["root"]["repeat"] in ("true", "1") else False
 
         async def set_loop_queue(self, loop: bool) -> bool:
@@ -774,57 +764,57 @@ else:
             return d.status_code == 200
 
         @property
-        def is_loop_queue(self) -> bool:
+        async def is_loop_queue(self) -> bool:
             """
             A property to get the loop state of VLC
             :return: bool
             """
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            content = xmltodict.parse(d.text)
             return True if content["root"]["loop"] in ("true", "1") else False
 
         async def fullscreen(self) -> bool:
             """
             Set the fullscreen state of VLC and return back the boolean of the result if success or not and the current state of the screen
-            :return: bool, bool
+            :return: (bool, bool)
             """
             d = await aiohttp_wrap.get(
                 self.url + "/requests/status.xml?command=fullscreen", auth=self.auth
             )
             return (
                 d.status_code == 200,
-                self.is_fullscreen,
+                await self.is_fullscreen,
             )
 
         @property
-        def is_fullscreen(self) -> bool:
+        async def is_fullscreen(self) -> bool:
 
             """
             Return the current state of VLC if VLC is in fullscreen returns true otherwise false
             :return: bool
             """
-
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
+            )
+            content = xmltodict.parse(d.text)
+            self.full_screen = (
+                True if content["root"]["fullscreen"] in ("true", "1") else False
             )
             return True if content["root"]["fullscreen"] in ("true", "1") else False
 
-        async def set_subtitle_file(self, uri: str) -> bool:
-            """
+        """ async def set_subtitle_file(self, uri: str) -> bool:
+            \"""
             Set the subtitle file to show in the VLC and returns bool based on successful or not
             :return: bool
-            """
-            uri = self.__encode_uri(uri)
+            \"""
+            \""" uri = self.__encode_uri(uri) \"""
             d = await aiohttp_wrap.get(
                 self.url + "/requests/status.xml?command=pl_enqueue&input=" + uri,
                 auth=self.auth,
             )
-            return d.status_code == 200
+            return d.status_code == 200 """
 
         async def browse(self, uri: str) -> dict:
             """
@@ -889,16 +879,15 @@ else:
             return d.status_code == 200
 
         @property
-        def is_paused(self) -> bool:
+        async def is_paused(self) -> bool:
             """
             Check if the media is actually paused or not. Returns bool indicate media is paused or not
             :return: bool
             """
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            content = xmltodict.parse(d.text)
             return True if content["root"]["state"] in ("paused", "stopped") else False
 
         async def seek(self, time: typing.Union[str, datetime.timedelta, int]) -> bool:
@@ -915,77 +904,71 @@ else:
             return d.status_code == 200
 
         @property
-        def time(self) -> int:
+        async def time(self) -> int:
             """
             Give the current time media is at (Unit seconds)
             :return: int, str
             """
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            content = xmltodict.parse(d.text)
             return content["root"]["time"]
 
         @property
-        def duration(self) -> float:
+        async def duration(self) -> float:
             """
             Give how long media is. (Unit seconds)
             :return: int, str
             """
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            content = xmltodict.parse(d.text)
             return content["root"]["length"]
 
         @property
-        def position(self) -> float:
+        async def position(self) -> float:
             """
             Get current bar position (0,1)
             :return: float, str
             """
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            content = xmltodict.parse(d.text)
             return content["root"]["position"]
 
         @property
-        def state(self) -> VLC_State:
+        async def state(self) -> VLC_State:
             """
             Give current state of the playback.
             :return: str
             """
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            content = xmltodict.parse(d.text)
             return VLC_State(content["root"]["state"])
 
         @property
-        def volume(self) -> typing.Union[int, float]:
+        async def volume(self) -> typing.Union[int, float]:
             """
             Get current playback's volume (0-512)
             If you want percentage returns then set the property of `volume_percentage` to `True`
             :return: int
             """
-
-            content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                ).text
+            d = await aiohttp_wrap.get(
+                self.url + "/requests/status.xml", auth=self.auth
             )
+            content = xmltodict.parse(d.text)
             if self.volume_percentage:
                 return float(content["root"]["volume"] / 2.56)
             else:
                 return int(content["root"]["volume"])
 
         @property
-        def is_playing(self):
+        async def is_playing(self):
             """
             Check if VLC is playing or not
             :return: bool

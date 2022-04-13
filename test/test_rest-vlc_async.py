@@ -56,25 +56,25 @@ async def test_append():
 @pytest.mark.asyncio
 async def test_random():
     assert await vlc.set_random(True), "Failed to set random"
-    assert vlc.is_random, "Failed to set random"
+    assert await vlc.is_random, "Failed to set random"
 
 
 @pytest.mark.asyncio
 async def test_repeat():
     assert await vlc.set_repeat_media(True), "Failed to set repeat"
-    assert vlc.is_repeat_media, "Failed to set repeat"
+    assert await vlc.is_repeat_media, "Failed to set repeat"
 
 
 @pytest.mark.asyncio
 async def test_loop():
     assert await vlc.set_loop_queue(True), "Failed to set loop"
-    assert vlc.is_loop_queue, "Failed to set loop"
+    assert await vlc.is_loop_queue, "Failed to set loop"
 
 
 @pytest.mark.asyncio
 async def test_fullscreen():
     assert await vlc.fullscreen(), "Failed to set fullscreen"
-    assert vlc.is_fullscreen, "Failed to set fullscreen"
+    assert await vlc.is_fullscreen, "Failed to set fullscreen"
     assert await vlc.fullscreen(), "Failed to set fullscreen"  # revert
     assert not vlc.is_fullscreen, "Failed to set fullscreen"  # revert
 
@@ -107,3 +107,8 @@ async def test_clear_history():
 @pytest.mark.asyncio
 async def test_seeking():
     assert await vlc.seek(69), "Failed to seek"
+
+
+# @pytest.mark.asyncio
+# async def test_subtitle():
+#     assert await vlc.set_subtitle_file(os.environ["VLC_SUBTITLE"])
