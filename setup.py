@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="rest-vlc",
-    version="1.6.0",
+    version="1.5.0",
     author="Rukchad Wongprayoon",
     author_email="contact@biomooping.tk",
     description="A Python library for controlling VLC media player via REST API",
