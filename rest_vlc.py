@@ -579,7 +579,7 @@ else:
                         "Auth must be tuple or list of length 2 which is username and password"
                     )
                 self.auth = aiohttp.BasicAuth(*auth)
-            if not asyncio.run(self.connectable):
+            if not self.connectable:
                 raise Exception("VLC is not running or REST API is not enabled")
             self.full_screen = None
 
