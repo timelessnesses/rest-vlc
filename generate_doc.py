@@ -50,7 +50,7 @@ def async_doc_to_markdown(function):
 
 for property, val in rest_vlc.VLC.__dict__.items():
     if not callable(val) and not property.startswith("__"):
-        markdown += f"## `rest_vlc.VLC.{property}`  \n{remove_indent_and_new_line(val.__doc__)}\n"
+        markdown += f"## `await rest_vlc.VLC.{property}`  \n{remove_indent_and_new_line(val.__doc__)}\n"
 
 for function in rest_vlc.Async_VLC.__dict__.values():
     if (
