@@ -90,3 +90,7 @@ def test_clear_history():
 
 def test_seeking():
     assert vlc.seek(69), "Failed to seek"
+
+
+# def test_subtitle():
+#     assert vlc.set_subtitle_file(os.environ["VLC_SUBTITLE"])
