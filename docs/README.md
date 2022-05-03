@@ -19,4 +19,4 @@ pip install rest-vlc
 You can go to [API Lists](https://rest-vlc.readthedocs.io/en/latest/api) for a list of available APIs with explainations.
 
 ## Status
-Under Heavy development.
+Stable(?)
