@@ -33,4 +33,4 @@ Examples are in tests/ and examples/
 - Returns dictionary instead of XML
 
 ## Status
-Stable
+Stable(?)
