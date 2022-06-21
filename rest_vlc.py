@@ -973,9 +973,8 @@ else:
             Check if VLC is playing or not
             :return: bool
             """
+            d = await aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
             content = xmltodict.parse(
-                asyncio.run(
-                    aiohttp_wrap.get(self.url + "/requests/status.xml", auth=self.auth)
-                )
+                d.text
             )
             return True if content["root"]["state"] in ("playing", "paused") else False
